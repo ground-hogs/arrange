@@ -1,0 +1,36 @@
+{
+  "name": "@cfvergara/arrange",
+  "version": "0.0.1",
+  "description": "Arrange reads configuration from external sources",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">18.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
+    "build": "microbundle"
+  },
+  "keywords": [
+    "configuration management",
+    "simple configuration",
+    "configs"
+  ],
+  "author": "Carlos Vergara",
+  "license": "CC-BY-NC-SA-2.5",
+  "devDependencies": {
+    "@tsconfig/node18": "^18.2.2",
+    "@types/node": "^20.7.1",
+    "microbundle": "^0.15.1",
+    "typescript": "^5.2.2"
+  },
+  "source": "src/index.ts",
+  "umd:main": "dist/arrange.umd.js",
+  "module": "dist/arrange.mjs",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "require": "./dist/index.js",
+    "default": "./dist/index.modern.mjs"
+  }
+}
