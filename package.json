@@ -1,6 +1,6 @@
 {
   "name": "@cfvergara/arrange",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Arrange reads configuration from external sources",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
