@@ -1,2 +1,167 @@
-!function(e,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("assert"),require("path"),require("fs"),require("fs/promises"),require("module")):"function"==typeof define&&define.amd?define(["exports","assert","path","fs","fs/promises","module"],r):r((e||self).arrange={},e.assert,e.path,e.fs,e.promises,e.module)}(this,function(e,r,n,t,o,i){function a(e,r){(null==r||r>e.length)&&(r=e.length);for(var n=0,t=new Array(r);n<r;n++)t[n]=e[n];return t}function u(e,r){var n="undefined"!=typeof Symbol&&e[Symbol.iterator]||e["@@iterator"];if(n)return(n=n.call(e)).next.bind(n);if(Array.isArray(e)||(n=function(e,r){if(e){if("string"==typeof e)return a(e,r);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(e):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?a(e,r):void 0}}(e))||r&&e&&"number"==typeof e.length){n&&(e=n);var t=0;return function(){return t>=e.length?{done:!0}:{done:!1,value:e[t++]}}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var c=JSON.parse;function s(){function e(e){return e instanceof Array}function r(e){return null!==e&&"object"==typeof e&&"constructor"in e&&e.constructor==Object}var n,t,o,i,a,u=!1,c=arguments[0]||{},f=1,l=!1,d=arguments.length;for("boolean"==typeof c&&(l=c,c=arguments[f]||{},f++),"object"!=typeof c&&("function"!=typeof(a=c)||a.constructor!==Function)&&(c={}),f===d&&(c=this,f--);f<d;f++)if(null!=(n=arguments[f]))for(var m in n)t=c[m],c!==(o=n[m])&&(l&&o&&(r(o)||(u=e(o)))?(u?i=t&&r(t)?t:{}:(u=!1,i=t&&e(t)?t:[]),c[m]=s(l,i,o)):void 0!==o&&(c[m]=o));return c}var f=function(e,n){try{r.notEqual(e,void 0,"Path can't be undefined"),r.notEqual(e,null,"Path can't be null"),r.notEqual(e,"","Path can't be empty"),r.match(e,/.?\..?/,"Path needs to have SOME extension");for(var t,o=new Map,i=u(l);!(t=i()).done;){var a=t.value;d(a[0],a[1],o)}if(n)for(var c,s=u(n);!(c=s()).done;){var f=c.value;d(f[0],f[1],o)}var m=e.split(".").at(-1);if(m&&o.has(m)){var p=o.get(m);return Promise.resolve(p(e))}throw new RangeError("Unknown config file type: "+m)}catch(e){return Promise.reject(e)}},l=[["json",function(e){try{return n.isAbsolute(e)||(e=n.resolve(process.cwd(),e)),Promise.resolve(function(){if(t.existsSync(e))return function(r,n){try{var t=Promise.resolve(o.readFile(e,"utf-8")).then(c)}catch(e){return n(e)}return t&&t.then?t.then(void 0,n):t}(0,function(r){if(r instanceof Error){if(!0===r.message.includes("JSON"))throw new RangeError('JSON in "'+e+'" is invalid');throw new RangeError("Can't read JSON config from \""+e+'"')}});throw new Error("Config file not found in "+e)}())}catch(e){return Promise.reject(e)}}],[["js","mjs"],function(e){try{n.isAbsolute(e)||(e=n.resolve(process.cwd(),e));var r=i.createRequire("undefined"==typeof document&&"undefined"==typeof location?new(require("url").URL)("file:"+__filename).href:"undefined"==typeof document?location.href:document.currentScript&&document.currentScript.src||new URL("index.umd.js",document.baseURI).href)(e);return Promise.resolve(r instanceof Function?r():r)}catch(e){return Promise.reject(e)}}]];function d(e,r,n){Array.isArray(e)?e.forEach(function(e){return n.set(e,r)}):n.set(e,r)}e.arrange=f,e.arrangeMany=function(e,r){try{return Promise.resolve(Promise.all(e.map(function(e){return f(e,r)}))).then(function(e){return s.apply(void 0,e)})}catch(e){return Promise.reject(e)}}});
-//# sourceMappingURL=index.umd.js.map
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('assert'), require('path'), require('fs'), require('fs/promises')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'assert', 'path', 'fs', 'fs/promises'], factory) :
+  (global = global || self, factory(global.arrange = {}, global.assert, global.path, global.fs, global.promises));
+})(this, (function (exports, assert, path, fs, promises) {
+  const {
+    parse
+  } = JSON;
+  const ext$1 = "json";
+  const parser$1 = async path$1 => {
+    if (!path.isAbsolute(path$1)) {
+      path$1 = path.resolve(process.cwd(), path$1);
+    }
+    if (!fs.existsSync(path$1)) {
+      throw new Error(`Config file not found in ${path$1}`);
+    } else {
+      try {
+        const contents = await promises.readFile(path$1, "utf-8");
+        return parse(contents);
+      } catch (cantParse) {
+        if (cantParse instanceof Error) {
+          switch (true) {
+            case cantParse.message.includes("JSON"):
+              throw new RangeError(`JSON in "${path$1}" is invalid`);
+            default:
+              throw new RangeError(`Can't read JSON config from "${path$1}"`);
+          }
+        }
+      }
+    }
+  };
+
+  const ext = ["js", "mjs"];
+  const parser = async path$1 => {
+    if (!path.isAbsolute(path$1)) {
+      path$1 = path.resolve(process.cwd(), path$1);
+    }
+    let contents;
+    if (module && "require" in module) {
+      const doRequire = module.require.bind(module);
+      contents = doRequire(path$1);
+    } else {
+      const {
+        default: imported
+      } = await import(path$1);
+      contents = imported;
+    }
+    if (contents instanceof Function) {
+      return contents();
+    }
+    return contents;
+  };
+
+  /**
+   * @typedef {boolean | Array<unknown> | Record<string, unknown>} Extendable
+   */
+  /**
+   * @typedef {Array<Extendable>} Extendables
+   */
+  /**
+   * Yanked from JQuery.
+   * @see https://gist.github.com/cfv1984/6319681685f78333d98a
+   * @param {Extendables}
+   * @returns Record
+   */
+  function mergeDeep(..._) {
+    function isFunction(fn) {
+      return typeof fn === "function" && fn.constructor === Function;
+    }
+    function isArray(ar) {
+      return ar instanceof Array;
+    }
+    function isPlainObject(obj) {
+      return obj !== null && typeof obj == "object" && "constructor" in obj && obj.constructor == Object;
+    }
+    let options;
+    let src;
+    let copy;
+    let copyIsArray = false;
+    let clone;
+    let target = arguments[0] || {};
+    let i = 1;
+    let deep = false;
+    const length = arguments.length;
+    if (typeof target === "boolean") {
+      deep = target;
+      target = arguments[i] || {};
+      i++;
+    }
+    if (typeof target !== "object" && !isFunction(target)) target = {};
+    if (i === length) {
+      target = this;
+      i--;
+    }
+    for (; i < length; i++) {
+      if ((options = arguments[i]) != null) {
+        for (const name in options) {
+          src = target[name];
+          copy = options[name];
+          if (target === copy) continue;
+          if (deep && copy && (isPlainObject(copy) || (copyIsArray = isArray(copy)))) {
+            if (!copyIsArray) {
+              copyIsArray = false;
+              clone = src && isArray(src) ? src : [];
+            } else clone = src && isPlainObject(src) ? src : {};
+            target[name] = mergeDeep(deep, clone, copy);
+          } else if (copy !== undefined) target[name] = copy;
+        }
+      }
+    }
+    return target;
+  }
+
+  /**
+   * @usage:
+   * const config = await arrange("./path/to/config/file.ext");
+   * // or
+   * const config = await arrange([
+   * "./path/to/config/file.ext",
+   *  [ "js", YOUR_OWN_CONFIG_PARSER],
+   * ]);
+   * // or
+   * const config = await arrange(
+   * "./path/to/config/file.ext",
+   * [
+   *  [ ["js","mjs"], YOUR_OWN_CONFIG_PARSER],
+   * ]);
+   */
+  const DEFAULT_ARRANGE_PARSERS = [[ext$1, parser$1], [ext, parser]];
+  async function arrange(path, parsers) {
+    assert.notEqual(path, undefined, "Path can't be undefined");
+    assert.notEqual(path, null, "Path can't be null");
+    assert.notEqual(path, "", "Path can't be empty");
+    assert.match(path, /.?\..?/, "Path needs to have SOME extension");
+    const loadedParsers = new Map();
+    for (const [ext, parser] of DEFAULT_ARRANGE_PARSERS) {
+      attachToMap(ext, parser, loadedParsers);
+    }
+    if (parsers) {
+      for (const [ext, parser] of parsers) {
+        attachToMap(ext, parser, loadedParsers);
+      }
+    }
+    const ext = path.split(".").at(-1);
+    if (ext && loadedParsers.has(ext)) {
+      const parser = loadedParsers.get(ext);
+      return await parser(path);
+    } else {
+      throw new RangeError(`Unknown config file type: ${ext}`);
+    }
+  }
+  async function arrangeMany(paths, parsers) {
+    const results = await Promise.all(paths.map(path => arrange(path, parsers)));
+    return mergeDeep(...results);
+  }
+  function attachToMap(ext, parser, map) {
+    if (Array.isArray(ext)) {
+      ext.forEach(e => map.set(e, parser));
+    } else {
+      map.set(ext, parser);
+    }
+  }
+
+  exports.arrange = arrange;
+  exports.arrangeMany = arrangeMany;
+
+}));

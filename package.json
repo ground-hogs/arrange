@@ -10,7 +10,7 @@
   "scripts": {
     "test": "ts-node --project ./tsconfig.json test/index.ts",
     "tsc": "tsc",
-    "build": "microbundle"
+    "build": "microbundle --sourcemap=false --target=node"
   },
   "keywords": [
     "configuration management",
