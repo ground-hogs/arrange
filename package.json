@@ -8,7 +8,7 @@
     "node": ">18.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "ts-node --project ./tsconfig.json test/index.ts",
     "tsc": "tsc",
     "build": "microbundle"
   },
@@ -23,6 +23,7 @@
     "@tsconfig/node18": "^18.2.2",
     "@types/node": "^20.7.1",
     "microbundle": "^0.15.1",
+    "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   },
   "source": "src/index.ts",

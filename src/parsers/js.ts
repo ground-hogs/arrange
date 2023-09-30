@@ -11,8 +11,15 @@ export const parser: ConfigParser = async (path: string) => {
   if (!isAbsolute(path)) {
     path = resolve(process.cwd(), path);
   }
-  const doRequire = createRequire(import.meta.url);
-  const contents = doRequire(path);
+
+  let contents: unknown;
+  if (module && "require" in module) {
+    const doRequire = module.require.bind(module);
+    contents = doRequire(path);
+  } else {
+    const { default: imported } = await import(path);
+    contents = imported;
+  }
 
   if (contents instanceof Function) {
     return contents() as ConfigReturn;
