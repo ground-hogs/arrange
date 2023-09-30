@@ -16,16 +16,22 @@ type Extendables = Array<Extendable>;
  * @returns Record
  */
 export default function mergeDeep<NergeResult = unknown>(
+  this: any,
   ..._: Extendables
 ): NergeResult {
-  function isFunction(fn) {
+  function isFunction(fn: unknown) {
     return typeof fn === "function" && fn.constructor === Function;
   }
-  function isArray(ar) {
+  function isArray(ar: unknown) {
     return ar instanceof Array;
   }
-  function isPlainObject(obj) {
-    return typeof obj == "object" && obj.constructor == Object;
+  function isPlainObject(obj: unknown) {
+    return (
+      obj !== null &&
+      typeof obj == "object" &&
+      "constructor" in (obj as object) &&
+      obj.constructor == Object
+    );
   }
 
   let options: unknown;
@@ -45,14 +51,14 @@ export default function mergeDeep<NergeResult = unknown>(
   }
   if (typeof target !== "object" && !isFunction(target)) target = {};
   if (i === length) {
-    target = this;
+    target = this as any;
     i--;
   }
   for (; i < length; i++) {
     if ((options = arguments[i]) != null) {
       for (const name in options) {
         src = target[name];
-        copy = options[name];
+        copy = options[name as keyof typeof options];
         if (target === copy) continue;
 
         if (

@@ -31,7 +31,7 @@ const DEFAULT_ARRANGE_PARSERS: NonNullable<ConfigParsers> = [
 ];
 type ParserMap = Map<string, ConfigParser>;
 
-export default async function arrange<ExpectedAttributes extends Config>(
+export async function arrange<ExpectedAttributes extends Config>(
   path: string,
   parsers?: ConfigParsers
 ): Promise<Partial<ExpectedAttributes>> {

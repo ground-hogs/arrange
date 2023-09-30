@@ -19,5 +19,6 @@ type Config = Record<string, ConfigValueType>;
 type ExtOrExts = string | Array<string>;
 type ConfigParserEntry = [ExtOrExts, ConfigParser];
 type ConfigParsers = Array<ConfigParserEntry>;
-export default function arrange<ExpectedAttributes extends Config>(path: string, parsers?: ConfigParsers): Promise<Partial<ExpectedAttributes>>;
+export declare function arrange<ExpectedAttributes extends Config>(path: string, parsers?: ConfigParsers): Promise<Partial<ExpectedAttributes>>;
+export declare function arrangeMany(paths: Array<string>, parsers?: ConfigParsers): Promise<unknown>;
 export {};

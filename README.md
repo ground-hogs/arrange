@@ -21,7 +21,7 @@ Suppose a `config.json` file like this one:
 To consume it, you would do:
 
 ```ts
-import arrange from ("@cfv1984/arrange");
+import { arrange } from ("@cfvergara/arrange");
 
 const config = await arrange("./config.json");
 
@@ -50,11 +50,9 @@ export default function configureSomething() {
 To consume it, you would do:
 
 ```ts
-import arrange from ("@cfv1984/arrange");
+import { arrange } from ("@cfvergara/arrange");
 
-const config = await arrange("./config.mjs");
-
-console.log( config.API ); // "https://233.234.235:123/service"
+const config = arrange("./config.mjs").then( console.log); // { "API": "https://233.234.235:123/service" }
 
 ```
 
